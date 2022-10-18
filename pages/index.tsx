@@ -29,7 +29,7 @@ const Home: NextPage = () => {
 			<div className="flex h-screen justify-center ">
 				<div className="flex flex-col items-center gap-5 bg-black pt-[5%] text-center text-white xs:w-[90%] sm:w-[640px] sm:px-10">
 					<div className="py-6 text-4xl font-semibold">BeFit.</div>
-					<div>Let&apos; s make fitness a habit, together.</div>
+					<div>Let&apos;s make fitness a habit, together.</div>
 					<div>Enter your phone number to join the revolution 💪🏽</div>
 					<div>
 						<PhoneInput
