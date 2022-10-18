@@ -62,6 +62,8 @@ export async function sendWelcomeTexts(to: string) {
 		'Every day you will receive a text when it is time to BeFit! And you better get to it, since we will know how long it takes you to respond 👀. At the end of the day, everyone will get a text that shows how long it took everyone else to BeFit.\n\nReply with a name to create a nickname for yourself that others will see in the summary texts!'
 	);
 
+	await send(to, 'If you want to stop receiving texts, reply with "STOP".');
+
 	return true;
 }
 
