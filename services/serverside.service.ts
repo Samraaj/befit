@@ -62,6 +62,19 @@ export async function logMostRecentWorkout(phone: string) {
 	// add a workout entry
 	const user = await getUser(phone);
 
+	// First, ensure user hasn't already logged this workout
+	const { data: userWorkouts, error: userWorkoutsError } = await supabase
+		.from('workouts_completed')
+		.select('*')
+		.eq('user_id', user.id)
+		.eq('workout_id', workout[0].id)
+		.maybeSingle();
+
+	if (userWorkouts) {
+		console.log('User has already logged this workout!');
+		return null;
+	}
+
 	const { data: workoutEntry, error: workoutEntryError } = await supabase
 		.from('workouts_completed')
 		.insert([{ workout_id: workout[0].id, user_id: user.id }])

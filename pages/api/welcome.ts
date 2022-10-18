@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getUser, logMostRecentWorkout, updateUserName } from 'services/serverside.service';
+import { createUser, getUser } from 'services/serverside.service';
 import { sendWelcomeTexts } from 'services/texting.service';
 
 type Data = {
@@ -15,14 +15,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 		const samplePhoneNumber = '+14258029195';
 
-		// const sendRes = await sendWelcomeTexts(samplePhoneNumber);
-
-		// console.log(sendRes);
-
 		const user = await getUser(samplePhoneNumber);
-		const logged = await logMostRecentWorkout(samplePhoneNumber);
 
-		console.log(user);
+		if (!user) {
+			console.log('Creating a new user!');
+			await createUser(samplePhoneNumber);
+			await sendWelcomeTexts(samplePhoneNumber);
+		}
 
 		return res.status(200).json({ phoneNumber });
 	}
