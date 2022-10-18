@@ -1,4 +1,5 @@
 import { supabase } from 'lib/SupabaseServer';
+import { Workout } from 'types';
 
 export async function createUser(phone: string) {
 	const { data, error } = await supabase
@@ -27,6 +28,58 @@ export async function getUser(phone: string) {
 	}
 
 	return user;
+}
+
+export async function getAllActiveUsers() {
+	const { data: users, error } = await supabase.from('users').select('*').eq('disabled', false);
+
+	if (error || !users) {
+		console.log(error);
+		return null;
+	}
+
+	return users;
+}
+
+export async function disableUser(phone: string) {
+	const { data, error } = await supabase
+		.from('users')
+		.update({ disabled: true })
+		.eq('phone', phone)
+		.single();
+
+	if (error) {
+		console.log(error);
+		return null;
+	}
+
+	return data;
+}
+
+export async function getWorkout(id: string) {
+	const { data: workout, error } = await supabase
+		.from('workouts')
+		.select('*')
+		.eq('id', id)
+		.maybeSingle();
+
+	if (error || !workout) {
+		console.log(error);
+		return null;
+	}
+
+	return workout as Workout;
+}
+
+export async function setWorkoutAsSent(id: string) {
+	const { data, error } = await supabase.from('workouts').update({ sentTexts: true }).eq('id', id);
+
+	if (error) {
+		console.log(error);
+		return null;
+	}
+
+	return data;
 }
 
 export async function updateUserName(phone: string, newName: string) {
@@ -63,7 +116,7 @@ export async function logMostRecentWorkout(phone: string) {
 	const user = await getUser(phone);
 
 	// First, ensure user hasn't already logged this workout
-	const { data: userWorkouts, error: userWorkoutsError } = await supabase
+	const { data: userWorkouts } = await supabase
 		.from('workouts_completed')
 		.select('*')
 		.eq('user_id', user.id)

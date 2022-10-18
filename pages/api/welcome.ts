@@ -13,17 +13,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		const { phoneNumber } = req.body;
 		console.log(phoneNumber);
 
-		const samplePhoneNumber = '+14258029195';
+		const decoratedPhoneNumber = `+${phoneNumber}`;
 
-		const user = await getUser(samplePhoneNumber);
+		const user = await getUser(decoratedPhoneNumber);
 
 		if (!user) {
 			console.log('Creating a new user!');
-			await createUser(samplePhoneNumber);
-			await sendWelcomeTexts(samplePhoneNumber);
+			await createUser(decoratedPhoneNumber);
+			await sendWelcomeTexts(decoratedPhoneNumber);
 		}
 
-		return res.status(200).json({ phoneNumber });
+		return res.status(200).json({ phoneNumber: decoratedPhoneNumber });
 	}
 
 	res.status(200).json({ phoneNumber: 'John Doe' });
